@@ -6,7 +6,6 @@
  *                                                                                                *
  ************************************************************************************************ */
 
-
 /**
  * Returns the rectangle object with width and height parameters and getArea() method
  *
@@ -20,10 +19,14 @@
  *    console.log(r.height);      // => 20
  *    console.log(r.getArea());   // => 200
  */
-function Rectangle(/* width, height */) {
-  throw new Error('Not implemented');
+function Rectangle(width, height) {
+  this.width = width;
+  this.height = height;
 }
 
+Rectangle.prototype.getArea = function calculateArea() {
+  return this.width * this.height;
+};
 
 /**
  * Returns the JSON representation of specified object
@@ -35,10 +38,9 @@ function Rectangle(/* width, height */) {
  *    [1,2,3]   =>  '[1,2,3]'
  *    { width: 10, height : 20 } => '{"height":10,"width":20}'
  */
-function getJSON(/* obj */) {
-  throw new Error('Not implemented');
+function getJSON(obj) {
+  return JSON.stringify(obj);
 }
-
 
 /**
  * Returns the object of specified type from JSON representation
@@ -51,10 +53,11 @@ function getJSON(/* obj */) {
  *    const r = fromJSON(Circle.prototype, '{"radius":10}');
  *
  */
-function fromJSON(/* proto, json */) {
-  throw new Error('Not implemented');
+function fromJSON(proto, json) {
+  const obj = JSON.parse(json);
+  Object.setPrototypeOf(obj, proto);
+  return obj;
 }
-
 
 /**
  * Css selectors builder
@@ -110,36 +113,133 @@ function fromJSON(/* proto, json */) {
  *  For more examples see unit tests.
  */
 
+class CSSSelectorBuilder {
+  constructor() {
+    this.selector = '';
+    this.order = 0;
+    this.allowedOrders = [0, 1, 2, 3, 4, 5];
+    this.elementCount = 0;
+    this.idCount = 0;
+    this.pseudoElementCount = 0;
+  }
+
+  checkOrder(order) {
+    if (this.order > order) {
+      throw new Error(
+        'Selector parts should be arranged in the following order: element, id, class, attribute, pseudo-class, pseudo-element'
+      );
+    }
+    this.order = order;
+  }
+
+  checkCount(count, errorMessage) {
+    if (this.count > 1) {
+      throw new Error(errorMessage);
+    }
+  }
+
+  element(value) {
+    this.checkOrder(1);
+    this.checkCount(
+      this.elementCount,
+      'Element should not occur more than one time inside the selector'
+    );
+    const newSelector = new CSSSelectorBuilder();
+    newSelector.selector = this.selector + value;
+    newSelector.elementCount = this.elementCount + 1;
+    newSelector.idCount = this.idCount;
+    newSelector.pseudoElementCount = this.pseudoElementCount;
+    return newSelector;
+  }
+
+  id(value) {
+    this.checkOrder(2);
+    this.checkCount(
+      this.idCount,
+      'ID should not occur more than one time inside the selector'
+    );
+    const newSelector = new CSSSelectorBuilder();
+    newSelector.selector = `${this.selector}#${value}`;
+    newSelector.elementCount = this.elementCount;
+    newSelector.idCount = this.idCount + 1;
+    newSelector.pseudoElementCount = this.pseudoElementCount;
+    return newSelector;
+  }
+
+  class(value) {
+    this.checkOrder(3);
+    const newSelector = new CSSSelectorBuilder();
+    newSelector.selector = `${this.selector}.${value}`;
+    return newSelector;
+  }
+
+  attr(value) {
+    this.checkOrder(4);
+    const newSelector = new CSSSelectorBuilder();
+    newSelector.selector = `${this.selector}[${value}]`;
+    return newSelector;
+  }
+
+  pseudoClass(value) {
+    this.checkOrder(5);
+    const newSelector = new CSSSelectorBuilder();
+    newSelector.selector = `${this.selector}:${value}`;
+    return newSelector;
+  }
+
+  pseudoElement(value) {
+    this.checkOrder(6);
+    this.checkCount(
+      this.pseudoElementCount,
+      'Pseudo-element should not occur more than one time inside the selector'
+    );
+    const newSelector = new CSSSelectorBuilder();
+    newSelector.selector = `${this.selector}::${value}`;
+    newSelector.elementCount = this.elementCount;
+    newSelector.idCount = this.idCount;
+    newSelector.pseudoElementCount = this.pseudoElementCount + 1;
+    return newSelector;
+  }
+
+  combine(selector1, combinator, selector2) {
+    this.selector = `${selector1.stringify()} ${combinator} ${selector2.stringify()}`;
+    return this;
+  }
+
+  stringify() {
+    return this.selector;
+  }
+}
+
 const cssSelectorBuilder = {
-  element(/* value */) {
-    throw new Error('Not implemented');
+  element(value) {
+    return new CSSSelectorBuilder().element(value);
   },
 
-  id(/* value */) {
-    throw new Error('Not implemented');
+  id(value) {
+    return new CSSSelectorBuilder().id(value);
   },
 
-  class(/* value */) {
-    throw new Error('Not implemented');
+  class(value) {
+    return new CSSSelectorBuilder().class(value);
   },
 
-  attr(/* value */) {
-    throw new Error('Not implemented');
+  attr(value) {
+    return new CSSSelectorBuilder().attr(value);
   },
 
-  pseudoClass(/* value */) {
-    throw new Error('Not implemented');
+  pseudoClass(value) {
+    return new CSSSelectorBuilder().pseudoClass(value);
   },
 
-  pseudoElement(/* value */) {
-    throw new Error('Not implemented');
+  pseudoElement(value) {
+    return new CSSSelectorBuilder().pseudoElement(value);
   },
 
-  combine(/* selector1, combinator, selector2 */) {
-    throw new Error('Not implemented');
+  combine(selector1, combinator, selector2) {
+    return new CSSSelectorBuilder().combine(selector1, combinator, selector2);
   },
 };
-
 
 module.exports = {
   Rectangle,
