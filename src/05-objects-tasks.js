@@ -133,7 +133,7 @@ class CSSSelectorBuilder {
   }
 
   checkCount(count, errorMessage) {
-    if (this.count > 1) {
+    if (this.count >= 1) {
       throw new Error(errorMessage);
     }
   }

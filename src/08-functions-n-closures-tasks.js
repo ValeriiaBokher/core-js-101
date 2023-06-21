@@ -51,17 +51,17 @@ function getPowerFunction(exponent) {
 }
 
 /**
- * Returns the polynom function of one argument based on specified coefficients.
+ * Returns the function of one argument based on specified coefficients.
  * See: https://en.wikipedia.org/wiki/Polynomial#Definition
  *
  * @params {integer}
  * @return {Function}
  *
  * @example
- *   getPolynom(2,3,5) => y = 2*x^2 + 3*x + 5
- *   getPolynom(1,-3)  => y = x - 3
- *   getPolynom(8)     => y = 8
- *   getPolynom()      => null
+ *   get(2,3,5) => y = 2*x^2 + 3*x + 5
+ *   get(1,-3)  => y = x - 3
+ *   get(8)     => y = 8
+ *   get()      => null
  */
 function getPolynom(...coefficients) {
   return function polynomFunction(x) {
@@ -80,12 +80,6 @@ function getPolynom(...coefficients) {
  * @params {Function} func - function to memoize
  * @return {Function} memoized function
  *
- * @example
- *   const memoizer = memoize(() => Math.random());
- *   memoizer() => some random number  (first run, evaluates the result of Math.random())
- *   memoizer() => the same random number  (second run, returns the previous cached result)
- *   ...
- *   memoizer() => the same random number  (next run, returns the previous cached result)
  */
 function memoize(func) {
   let cache = null;
@@ -106,12 +100,6 @@ function memoize(func) {
  * @param {number} attempts
  * @return {Function}
  *
- * @example
- * const attempt = 0, retryer = retry(() => {
- *      if (++attempt % 2) throw new Error('test');
- *      else return attempt;
- * }, 2);
- * retryer() => 2
  */
 function retry(func, attempts) {
   return function retryFunction() {
