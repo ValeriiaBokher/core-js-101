@@ -199,7 +199,7 @@ function findFirstSingleChar(str) {
   });
 
   const firstNonRepeatedChar = [...str].find(
-    (char) => charCount.get(char) === 1
+    (char) => charCount.get(char) === 1,
   );
 
   return firstNonRepeatedChar || null;

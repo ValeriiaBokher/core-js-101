@@ -104,7 +104,7 @@ function chainPromises(array, action) {
   return array
     .reduce(
       (pr, cu) => pr.then((pR) => cu.then((cR) => action(pR, cR)).catch(() => pR)),
-      Promise.resolve()
+      Promise.resolve(),
     )
     .then((finalResult) => finalResult);
 }

@@ -126,7 +126,7 @@ class CSSSelectorBuilder {
   checkOrder(order) {
     if (this.order > order) {
       throw new Error(
-        'Selector parts should be arranged in the following order: element, id, class, attribute, pseudo-class, pseudo-element'
+        'Selector parts should be arranged in the following order: element, id, class, attribute, pseudo-class, pseudo-element',
       );
     }
     this.order = order;
@@ -142,7 +142,7 @@ class CSSSelectorBuilder {
     this.checkOrder(1);
     this.checkCount(
       this.elementCount,
-      'Element should not occur more than one time inside the selector'
+      'Element should not occur more than one time inside the selector',
     );
     const newSelector = new CSSSelectorBuilder();
     newSelector.selector = this.selector + value;
@@ -156,7 +156,7 @@ class CSSSelectorBuilder {
     this.checkOrder(2);
     this.checkCount(
       this.idCount,
-      'ID should not occur more than one time inside the selector'
+      'ID should not occur more than one time inside the selector',
     );
     const newSelector = new CSSSelectorBuilder();
     newSelector.selector = `${this.selector}#${value}`;
@@ -191,7 +191,7 @@ class CSSSelectorBuilder {
     this.checkOrder(6);
     this.checkCount(
       this.pseudoElementCount,
-      'Pseudo-element should not occur more than one time inside the selector'
+      'Pseudo-element should not occur more than one time inside the selector',
     );
     const newSelector = new CSSSelectorBuilder();
     newSelector.selector = `${this.selector}::${value}`;
