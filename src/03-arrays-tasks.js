@@ -471,11 +471,7 @@ function getIdentityMatrix(n) {
  *     3, 3   => [ 3 ]
  */
 function getIntervalArray(start, end) {
-  const arr = [];
-  for (let i = start; i <= end; i += 1) {
-    arr.push(i);
-  }
-  return arr;
+  return Array.from(Array(end - start + 1).keys(), (i) => start + i);
 }
 
 /**
@@ -490,13 +486,7 @@ function getIntervalArray(start, end) {
  *   [ 1, 1, 2, 2, 3, 3, 4, 4] => [ 1, 2, 3, 4]
  */
 function distinct(arr) {
-  const unique = [];
-  for (let i = 0; i < arr.length; i += 1) {
-    if (!unique.includes(arr[i])) {
-      unique.push(arr[i]);
-    }
-  }
-  return unique;
+  return arr.filter((value, index) => arr.indexOf(value) === index);
 }
 
 /**
@@ -530,17 +520,16 @@ function distinct(arr) {
  *   }
  */
 function group(array, keySelector, valueSelector) {
-  const resultMap = new Map();
-  for (let i = 0; i < array.length; i += 1) {
-    const key = keySelector(array[i]);
-    const value = valueSelector(array[i]);
+  return array.reduce((resultMap, currentItem) => {
+    const key = keySelector(currentItem);
+    const value = valueSelector(currentItem);
     if (resultMap.has(key)) {
       resultMap.get(key).push(value);
     } else {
       resultMap.set(key, [value]);
     }
-  }
-  return resultMap;
+    return resultMap;
+  }, new Map());
 }
 
 /**
@@ -557,12 +546,7 @@ function group(array, keySelector, valueSelector) {
  *   ['one','two','three'], (x) => x.split('')  =>   ['o','n','e','t','w','o','t','h','r','e','e']
  */
 function selectMany(arr, childrenSelector) {
-  const arr2 = [];
-  for (let i = 0; i < arr.length; i += 1) {
-    const children = childrenSelector(arr[i]);
-    arr2.push(...children);
-  }
-  return arr2;
+  return arr.flatMap(childrenSelector);
 }
 
 /**
